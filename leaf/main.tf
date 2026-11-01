@@ -4,6 +4,13 @@ resource "github_repository" "this" {
   visibility = var.repo_visibility
 }
 
+resource "github_repository_custom_property" "institutive" {
+  repository     = github_repository.this.name
+  property_name  = "institutive"
+  property_type  = "true_false"
+  property_value = ["true"]
+}
+
 resource "github_repository_file" "merge_gate" {
   repository = github_repository.this.name
 
