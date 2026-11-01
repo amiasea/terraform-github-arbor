@@ -9,9 +9,9 @@ run "pomology" {
   command = plan
 
   variables {
-    github_organization_name = "amiasea-development"
+    github_organization_name = "amiasea"
 
-    github_app_id = "5476448"
+    github_app_id = "2670685"
 
     repo_name_prefix = "test"
 
