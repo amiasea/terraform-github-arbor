@@ -2,9 +2,8 @@ provider "github" {
   owner = "amiasea"
 
   legacy_client = false
-
-  // GITHUB_TOKEN PAT is expected for tetss
-  # app_auth {}
+  
+  app_auth {}
 }
 
 run "pomology" {
