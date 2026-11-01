@@ -27,7 +27,7 @@ output "variety_cordon_repositories" {
 
 output "organization" {
   value = {
-    id = data.github_organization.this.id
-    name = data.github_organization.this.name
+    id = "254765293"
+    name = "amiasea"
   }
 }
