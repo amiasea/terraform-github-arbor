@@ -8,7 +8,3 @@ module "cordon" {
   leaves           = each.value.leaves
   github_app_id    = var.github_app_id
 }
-
-data "github_organization" "this" {
-  name = var.github_organization_name
-}
