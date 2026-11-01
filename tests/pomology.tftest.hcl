@@ -1,5 +1,5 @@
 provider "github" {
-  owner = "amiasea-development"
+  owner = "amiasea"
 
   // GITHUB_TOKEN PAT is expected for tetss
   # app_auth {}
