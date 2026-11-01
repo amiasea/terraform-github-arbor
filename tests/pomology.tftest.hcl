@@ -6,7 +6,7 @@ provider "github" {
 }
 
 run "pomology" {
-  command = plan
+  command = apply
 
   variables {
     github_organization_name = "amiasea"
