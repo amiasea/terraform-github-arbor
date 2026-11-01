@@ -1,11 +1,12 @@
 provider "github" {
   owner = "amiasea-development"
 
-  app_auth {}
+  // GITHUB_TOKEN PAT is expected for tetss
+  # app_auth {}
 }
 
 run "pomology" {
-  command = apply
+  command = plan
 
   variables {
     github_organization_name = "amiasea-development"
