@@ -1,0 +1,37 @@
+
+# name: Test
+
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#     types:
+#       - opened
+#       - synchronize
+#       - reopened
+#       - ready_for_review
+
+# permissions:
+#   contents: read
+
+# jobs:
+#   test:
+#     name: Terraform test
+#     if: github.head_ref == 'development'
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Setup Terraform
+#         uses: hashicorp/setup-terraform@v3
+#         with:
+#           terraform_version: 1.17.1
+
+#       - name: Test module
+#         env:
+#           TF_TOKEN_app_terraform_io: ${{ secrets.HCP_TERRAFORM_TOKEN }}
+#         run: |
+#           terraform test \
+#             -cloud-run=app.terraform.io/amiasea-development/espalier/github

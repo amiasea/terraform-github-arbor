@@ -1,0 +1,105 @@
+name: Leaf Merge Gate
+
+on:
+  pull_request:
+    branches:
+      - development
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+permissions:
+  contents: read
+  attestations: read
+
+jobs:
+  merge-gate:
+    name: Validate Leaf Merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate aspect-option source branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$HEAD_REF" == *-main && "$HEAD_REF" != "-main" ]]; then
+            echo "Allowed: '$HEAD_REF' is an aspect-option main branch."
+          else
+            echo "::error::Rejected: '$HEAD_REF' must identify an aspect option and end in -main."
+            exit 1
+          fi
+
+      - name: Check out candidate commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Validate candidate maturity attestation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          predicate_type="https://amiasea.com/attestations/maturity/v1"
+          subject_file=$(mktemp)
+          trap 'rm -f "$subject_file" attest.err release.err' EXIT
+
+          printf '%s' "$COMMIT_SHA" > "$subject_file"
+
+          if ! attest_json=$(gh attestation verify "$subject_file" \
+            --predicate-type "$predicate_type" \
+            --format json 2>attest.err); then
+            echo "::error::Maturity attestation verification failed for commit $COMMIT_SHA"
+            cat attest.err >&2
+            exit 1
+          fi
+
+          tag=$(jq -er --arg commit "$COMMIT_SHA" '
+            [
+              .. | objects
+              | select(has("predicate") and (.predicate | type) == "object")
+              | .predicate
+              | select(.commit == $commit)
+              | select(.repository == env.GITHUB_REPOSITORY)
+              | select(.mature == true)
+              | select((.tag | type) == "string" and (.tag | length) > 0)
+              | .tag
+            ] | unique
+            | if length == 1 then .[0]
+              elif length == 0 then error("no matching maturity predicate for commit")
+              else error("ambiguous maturity tags: " + join(", "))
+              end
+          ' <<< "$attest_json")
+
+          if ! gh release verify "$tag" 2>release.err; then
+            echo "::error::Release verification failed for $tag"
+            cat release.err >&2
+            exit 1
+          fi
+
+          encoded_tag=$(jq -rn --arg tag "$tag" '$tag | @uri')
+          ref_json=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$encoded_tag")
+          object_type=$(jq -er '.object.type' <<< "$ref_json")
+          object_sha=$(jq -er '.object.sha' <<< "$ref_json")
+
+          if [[ "$object_type" == "commit" ]]; then
+            resolved="$object_sha"
+          elif [[ "$object_type" == "tag" ]]; then
+            resolved=$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$object_sha" --jq '.object.sha')
+          else
+            echo "::error::Unexpected tag object type '$object_type' for $tag"
+            exit 1
+          fi
+
+          if [[ "$resolved" != "$COMMIT_SHA" ]]; then
+            echo "::error::Tag $tag resolves to $resolved, expected candidate commit $COMMIT_SHA"
+            exit 1
+          fi
+
+          echo "PASS: $GITHUB_REPOSITORY@$COMMIT_SHA is mature via release $tag"
