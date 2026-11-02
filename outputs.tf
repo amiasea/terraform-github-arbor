@@ -5,7 +5,8 @@ output "variety_cordon_repositories" {
       cordon = {
         name               = cordon_name
         repository_name    = cordon.repository_name
-        repository_node_id = cordon.repository_id
+        repository_id      = cordon.repository_id
+        repository_node_id = cordon.repository_node_id
       }
 
       varieties = {
@@ -15,6 +16,7 @@ output "variety_cordon_repositories" {
             for leaf_name, leaf in var.pomology.cordons[cordon_name].leaves :
             leaf_name => {
               repository_name    = cordon.leaves[leaf_name].repository_name
+              repository_id      = cordon.leaves[leaf_name].repository_id
               repository_node_id = cordon.leaves[leaf_name].repository_node_id
               option             = leaf.options[variety_name]
             }
@@ -27,7 +29,7 @@ output "variety_cordon_repositories" {
 
 output "organization" {
   value = {
-    id = data.github_organization.this.id
+    id   = data.github_organization.this.id
     name = data.github_organization.this.name
   }
 }

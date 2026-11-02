@@ -26,6 +26,7 @@ run "pomology" {
         for cordon_name, result in output.variety_cordon_repositories :
         result.cordon.name == cordon_name &&
         result.cordon.repository_name != "" &&
+        result.cordon.repository_id != "" &&
         result.cordon.repository_node_id != "" &&
         length(result.varieties) == length(var.pomology.varieties) &&
         alltrue([
@@ -34,6 +35,7 @@ run "pomology" {
           alltrue([
             for leaf_name, leaf in result.varieties[variety_name].leaves :
             leaf.repository_name != "" &&
+            leaf.repository_id != "" &&
             leaf.repository_node_id != "" &&
             leaf.option == var.pomology.cordons[cordon_name].leaves[leaf_name].options[variety_name]
           ])
