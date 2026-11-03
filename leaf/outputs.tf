@@ -5,7 +5,7 @@ output "repository_name" {
 
 output "repository_id" {
   description = "Immutable GitHub ID of the leaf repository."
-  value       = github_repository.this.id
+  value       = github_repository.this.repo_id
 }
 
 output "repository_node_id" {
