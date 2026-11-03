@@ -3,7 +3,7 @@ output "repository_name" {
 }
 
 output "repository_id" {
-  value = github_repository.this.name
+  value = github_repository.this.repo_id
 }
 
 output "repository_node_id" {
