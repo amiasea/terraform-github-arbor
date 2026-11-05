@@ -18,6 +18,8 @@ output "variety_cordon_repositories" {
               repository_name    = cordon.leaves[leaf_name].repository_name
               repository_id      = cordon.leaves[leaf_name].repository_id
               repository_node_id = cordon.leaves[leaf_name].repository_node_id
+              path               = cordon.leaves[leaf_name].path
+              url                = cordon.leaves[leaf_name].url
               option             = leaf.options[variety_name]
             }
           }
