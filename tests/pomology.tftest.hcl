@@ -2,7 +2,7 @@ provider "github" {
   owner = "amiasea"
 
   legacy_client = false
-  
+
   app_auth {}
 }
 
@@ -37,12 +37,14 @@ run "pomology" {
             leaf.repository_name != "" &&
             leaf.repository_id != "" &&
             leaf.repository_node_id != "" &&
+            leaf.path == leaf.repository_name &&
+            leaf.url != "" &&
             leaf.option == var.pomology.cordons[cordon_name].leaves[leaf_name].options[variety_name]
           ])
         ])
       ])
     )
 
-    error_message = "Each Cordon must expose its repository name and node ID, every declared variety, and each leaf's repository name, node ID, and correct selected option."
+    error_message = "Each Cordon must expose its repository identity and every declared variety; each Leaf must expose its repository identity, path, HTTP clone URL, and correct selected option."
   }
 }
