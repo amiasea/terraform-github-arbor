@@ -20,18 +20,36 @@ resource "github_repository_file" "gitmodules" {
   overwrite_on_create = true
 }
 
-resource "github_repository_custom_property" "cordon_topology" {
+resource "github_repository_custom_property" "cordon" {
   repository    = github_repository.this.name
-  property_name = "cordon_topology"
+  property_name = "cordon"
+  property_type = "true_false"
+
+  property_value = ["true"]
+}
+
+resource "github_repository_custom_property" "varieties" {
+  repository    = github_repository.this.name
+  property_name = "varieties"
   property_type = "string"
 
-  property_value = [
-    jsonencode({
-      varieties      = var.varieties
-      aspect_options = var.aspect_options
-      cordon         = var.cordon
-    })
-  ]
+  property_value = toset(var.varieties)
+}
+
+resource "github_repository_custom_property" "aspect_options" {
+  repository    = github_repository.this.name
+  property_name = "aspect_options"
+  property_type = "string"
+
+  property_value = toset(var.aspect_options)
+}
+
+resource "github_repository_custom_property" "tier" {
+  repository    = github_repository.this.name
+  property_name = "tier"
+  property_type = "string"
+
+  property_value = toset([var.cordon.tier])
 }
 
 resource "github_branch" "source" {

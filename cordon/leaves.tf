@@ -7,4 +7,6 @@ module "leaves" {
   aspect_options   = sort(distinct(values(each.value.options)))
   repo_visibility  = var.repo_visibility
   github_app_id    = var.github_app_id
+
+  tier = var.cordon.tier
 }
