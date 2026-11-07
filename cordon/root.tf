@@ -20,13 +20,6 @@ resource "github_repository_file" "gitmodules" {
   overwrite_on_create = true
 }
 
-resource "github_repository_custom_property" "institutive" {
-  repository     = github_repository.this.name
-  property_name  = "institutive"
-  property_type  = "true_false"
-  property_value = ["true"]
-}
-
 resource "github_repository_custom_property" "cordon_topology" {
   repository    = github_repository.this.name
   property_name = "cordon_topology"
