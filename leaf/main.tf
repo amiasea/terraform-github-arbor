@@ -4,13 +4,6 @@ resource "github_repository" "this" {
   visibility = var.repo_visibility
 }
 
-resource "github_repository_custom_property" "cordon_topology" {
-  repository     = github_repository.this.name
-  property_name  = "cordon_topology"
-  property_type  = "string"
-  property_value = null
-}
-
 resource "github_repository_file" "merge_gate" {
   repository = github_repository.this.name
 
