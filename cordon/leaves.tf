@@ -8,5 +8,5 @@ module "leaves" {
   repo_visibility  = var.repo_visibility
   github_app_id    = var.github_app_id
 
-  tier = var.cordon.tier
+  tier = var.repo_name
 }
