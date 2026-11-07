@@ -1,5 +1,5 @@
 provider "github" {
-  owner = "amiasea"
+  owner = "amiasea-enterprise-solution"
 
   legacy_client = false
 
@@ -10,7 +10,7 @@ run "pomology" {
   command = apply
 
   variables {
-    github_organization_name = "amiasea"
+    github_organization_name = "amiasea-enterprise-solution"
 
     github_app_id = "2670685"
 

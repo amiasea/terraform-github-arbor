@@ -8,13 +8,14 @@ variable "repo_name" {
   type        = string
 }
 
-variable "leaves" {
-  description = "Direct leaf aspects and their variety-to-option mappings."
+# variable "leaves" {
+#   description = "Direct leaf aspects and their variety-to-option mappings."
 
-  type = map(object({
-    options = map(string)
-  }))
-}
+#   type = map(object({
+#     options = map(string)
+#   }))
+# }
+
 variable "repo_visibility" {
   description = "Repository visibility"
   type = string
@@ -23,4 +24,24 @@ variable "repo_visibility" {
 variable "github_app_id" {
   description = "GitHub App ID"
   type        = string
+}
+
+variable "varieties" {
+  description = "Varieties"
+  type = list(string)
+}
+
+variable "aspect_options" {
+  description = "Aspect Options"
+  type = list(string)
+}
+
+variable "cordon" {
+  description = "Cordon"
+  type = object({
+      tier = string
+      leaves = map(object({
+        options = map(string)
+      }))
+    })
 }

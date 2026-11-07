@@ -10,15 +10,20 @@ variable "repo_name" {
 
 variable "aspect_options" {
   description = "Aspect options"
-  type          = list(string)
+  type        = list(string)
 }
 
 variable "repo_visibility" {
   description = "Repository visibility"
-  type = string
+  type        = string
 }
 
 variable "github_app_id" {
   description = "GitHub App ID"
+  type        = string
+}
+
+variable "tier" {
+  description = "Cordon tier"
   type        = string
 }

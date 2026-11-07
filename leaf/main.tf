@@ -4,11 +4,20 @@ resource "github_repository" "this" {
   visibility = var.repo_visibility
 }
 
-resource "github_repository_custom_property" "institutive" {
-  repository     = github_repository.this.name
-  property_name  = "institutive"
-  property_type  = "true_false"
-  property_value = ["true"]
+resource "github_repository_custom_property" "aspect_options" {
+  repository    = github_repository.this.name
+  property_name = "aspect_options"
+  property_type = "string"
+
+  property_value = [join(",", var.aspect_options)]
+}
+
+resource "github_repository_custom_property" "tier" {
+  repository    = github_repository.this.name
+  property_name = "tier"
+  property_type = "string"
+
+  property_value = toset([var.tier])
 }
 
 resource "github_repository_file" "merge_gate" {

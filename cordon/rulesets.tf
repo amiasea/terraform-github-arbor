@@ -26,6 +26,10 @@ resource "github_repository_ruleset" "main" {
       require_last_push_approval      = false
     }
   }
+
+  depends_on = [
+    github_repository_file.gitmodules,
+  ]
 }
 
 resource "github_repository_ruleset" "development" {
