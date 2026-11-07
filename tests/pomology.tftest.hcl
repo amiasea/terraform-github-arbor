@@ -1,5 +1,5 @@
 provider "github" {
-  owner = "amiasea"
+  owner = "amiasea-enterprise-solution"
 
   legacy_client = false
 
