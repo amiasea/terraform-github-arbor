@@ -4,9 +4,9 @@ resource "github_repository" "this" {
   visibility = var.repo_visibility
 }
 
-resource "github_repository_custom_property" "cordon_tomology" {
+resource "github_repository_custom_property" "cordon_topology" {
   repository     = github_repository.this.name
-  property_name  = "cordon_tomology"
+  property_name  = "cordon_topology"
   property_type  = "string"
   property_value = null
 }
