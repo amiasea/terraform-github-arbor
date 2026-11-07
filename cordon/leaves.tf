@@ -1,6 +1,6 @@
 module "leaves" {
   source   = "../leaf"
-  for_each = var.leaves
+  for_each = var.cordon.leaves
 
   repo_name_prefix = "${var.repo_name_prefix}-${var.repo_name}"
   repo_name        = each.key

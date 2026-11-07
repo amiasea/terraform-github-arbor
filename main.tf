@@ -5,8 +5,11 @@ module "cordon" {
   repo_visibility  = var.repo_visibility
   repo_name_prefix = var.repo_name_prefix
   repo_name        = each.key
-  leaves           = each.value.leaves
   github_app_id    = var.github_app_id
+
+  varieties = var.pomology.varieties
+  aspect_options = var.pomology.aspectOptions
+  cordon = each.value
 }
 
 data "github_organization" "this" {
