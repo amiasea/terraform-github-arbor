@@ -9,7 +9,7 @@ resource "github_repository_custom_property" "aspect_options" {
   property_name = "aspect_options"
   property_type = "string"
 
-  property_value = toset(var.aspect_options)
+  property_value = [join(",", var.aspect_options)]
 }
 
 resource "github_repository_custom_property" "tier" {

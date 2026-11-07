@@ -33,7 +33,7 @@ resource "github_repository_custom_property" "varieties" {
   property_name = "varieties"
   property_type = "string"
 
-  property_value = toset(var.varieties)
+  property_value = [join(",", var.varieties)]
 }
 
 resource "github_repository_custom_property" "aspect_options" {
@@ -41,15 +41,16 @@ resource "github_repository_custom_property" "aspect_options" {
   property_name = "aspect_options"
   property_type = "string"
 
-  property_value = toset(var.aspect_options)
+  property_value = [join(",", var.aspect_options)]
 }
 
 resource "github_repository_custom_property" "tier" {
+  count = var.cordon.tier == null ? 0 : 1
+
   repository    = github_repository.this.name
   property_name = "tier"
   property_type = "string"
-
-  property_value = toset([var.cordon.tier])
+  property_value = [var.cordon.tier]
 }
 
 resource "github_branch" "source" {
