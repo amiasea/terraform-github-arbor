@@ -2,7 +2,7 @@ resource "github_repository_ruleset" "main" {
   name        = "main"
   repository  = github_repository.this.name
   target      = "branch"
-  enforcement = "active"
+  enforcement = var.ruleset_enforcement
 
   conditions {
     ref_name {
@@ -37,7 +37,7 @@ resource "github_repository_ruleset" "development" {
   name        = "development"
   repository  = github_repository.this.name
   target      = "branch"
-  enforcement = "active"
+  enforcement = var.ruleset_enforcement
 
   conditions {
     ref_name {
@@ -68,7 +68,7 @@ resource "github_repository_ruleset" "branch_creation" {
   name        = "Branch creation"
   repository  = github_repository.this.name
   target      = "branch"
-  enforcement = "active"
+  enforcement = var.ruleset_enforcement
 
   conditions {
     ref_name {
