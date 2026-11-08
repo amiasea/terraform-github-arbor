@@ -1,0 +1,81 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  validate:
+    name: Validate Composition
+    runs-on: ubuntu-latest
+
+    env:
+      POMOLOGY_FILE: "${split("-", solution_definitions_release_tag)[1]}-pomology.json"
+
+    steps:
+      - name: Checkout Cordon
+        uses: actions/checkout@v7.0.1
+        with:
+          submodules: true
+
+      - name: Azure Login
+        uses: azure/login@v3.1.0
+        with:
+          client-id: $${{ vars.AZURE_INSTITUTIVE_CLIENT_ID }}
+          tenant-id: $${{ vars.AZURE_INSTITUTIVE_TENANT_ID }}
+          subscription-id: $${{ vars.AZURE_INSTITUTIVE_SUBSCRIPTION_ID }}
+
+      - name: Retrieve GitHub App PEM File
+        shell: pwsh
+        env:
+          GITHUB_APP_PEM_FILE_SECRET_ID: $${{ vars.AMIASEA_GITHUB_APP_PEM_FILE_VERSIONLESS_ID }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if (-not $env:GITHUB_APP_PEM_FILE_SECRET_ID) {
+            throw "AMIASEA_GITHUB_APP_PEM_FILE_VERSIONLESS_ID is not configured."
+          }
+
+          $privateKey = az keyvault secret show `
+            --id $env:GITHUB_APP_PEM_FILE_SECRET_ID `
+            --query value `
+            --output tsv
+
+          if ($LASTEXITCODE -ne 0 -or -not $privateKey) {
+            throw "Failed to retrieve GitHub App PEM file."
+          }
+
+          Write-Output "::add-mask::$privateKey"
+          "GITHUB_APP_PRIVATE_KEY<<EOF" >> $env:GITHUB_ENV
+          $privateKey >> $env:GITHUB_ENV
+          "EOF" >> $env:GITHUB_ENV
+
+      - name: Generate GitHub App Installation Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
+          private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
+          owner: amiasea
+          repositories: enterprise-solution-definitions
+
+      - name: Download Pomology
+        uses: robinraju/release-downloader@v1.13
+        with:
+          repository: amiasea/enterprise-solution-definitions
+          tag: "${solution_definitions_release_tag}"
+          fileName: "$${{ env.POMOLOGY_FILE }}"
+          out-file-path: .amiasea
+          token: $${{ steps.app-token.outputs.token }}
+
+      - name: Validate Composition
+        uses: amiasea/espalier-validation-action@v1
+        with:
+          pomology: .amiasea/$${{ env.POMOLOGY_FILE }}

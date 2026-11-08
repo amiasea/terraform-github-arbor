@@ -17,6 +17,8 @@ run "pomology" {
     repo_name_prefix = "test"
 
     pomology = jsondecode(file("tests/pomology.json"))
+
+    solution_definitions_release_tag = "v1.0.0-testing"
   }
 
   assert {

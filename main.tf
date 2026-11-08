@@ -7,9 +7,11 @@ module "cordon" {
   repo_name        = each.key
   github_app_id    = var.github_app_id
 
-  varieties = var.pomology.varieties
+  varieties      = var.pomology.varieties
   aspect_options = var.pomology.aspectOptions
-  cordon = each.value
+  cordon         = each.value
+
+  solution_definitions_release_tag = var.solution_definitions_release_tag
 }
 
 data "github_organization" "this" {
