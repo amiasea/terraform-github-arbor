@@ -27,3 +27,13 @@ variable "tier" {
   description = "Cordon tier"
   type        = string
 }
+
+variable "ruleset_enforcement" {
+  type    = string
+  default = "disabled"
+
+  validation {
+    condition     = contains(["disabled", "active"], var.ruleset_enforcement)
+    error_message = "Ruleset enforcement must be disabled or active."
+  }
+}
