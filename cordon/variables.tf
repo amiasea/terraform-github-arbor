@@ -45,3 +45,8 @@ variable "cordon" {
       }))
     })
 }
+
+variable "solution_definitions_release_tag" {
+  description = "Solution definitions release tag"
+  type        = string
+}

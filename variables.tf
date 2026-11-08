@@ -1,6 +1,6 @@
 variable "github_organization_name" {
   description = "Name of the GitHub Organization"
-  type = string
+  type        = string
 }
 
 variable "repo_name_prefix" {
@@ -21,7 +21,7 @@ variable "github_app_id" {
 
 variable "pomology" {
   type = object({
-    varieties = list(string)
+    varieties     = list(string)
     aspectOptions = list(string)
 
     cordons = map(object({
@@ -31,4 +31,9 @@ variable "pomology" {
       }))
     }))
   })
+}
+
+variable "solution_definitions_release_tag" {
+  description = "Solution definitions release tag"
+  type        = string
 }
