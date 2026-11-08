@@ -21,7 +21,7 @@ resource "github_repository_file" "gitmodules" {
 }
 
 resource "github_repository_file" "pull_request" {
-  repository          = github_repository.this
+  repository          = github_repository.this.name
   branch              = "main"
   file                = ".github/workflows/pull_request.yml"
   content             = templatefile("${path.module}/pull_request.yml.tmpl", {
