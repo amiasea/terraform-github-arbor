@@ -29,6 +29,10 @@ resource "github_repository_file" "pull_request" {
   })
   commit_message      = "Add composition validation workflow"
   overwrite_on_create = true
+
+  depends_on = [
+    github_repository_file.gitmodules
+  ]
 }
 
 resource "github_repository_custom_property" "cordon" {
