@@ -10,6 +10,11 @@ module "cordon" {
   varieties      = var.pomology.varieties
   aspect_options = var.pomology.aspectOptions
   cordon         = each.value
+  child_cordon_names = [
+    for cordon_name, cordon in var.pomology.cordons :
+    cordon_name
+    if cordon.tier == each.key
+  ]
 
   solution_definitions_release_tag = var.solution_definitions_release_tag
 }

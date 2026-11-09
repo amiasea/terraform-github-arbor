@@ -8,14 +8,6 @@ variable "repo_name" {
   type        = string
 }
 
-# variable "leaves" {
-#   description = "Direct leaf aspects and their variety-to-option mappings."
-
-#   type = map(object({
-#     options = map(string)
-#   }))
-# }
-
 variable "repo_visibility" {
   description = "Repository visibility"
   type = string
@@ -59,4 +51,10 @@ variable "ruleset_enforcement" {
     condition     = contains(["disabled", "active"], var.ruleset_enforcement)
     error_message = "Ruleset enforcement must be disabled or active."
   }
+}
+
+variable "child_cordon_names" {
+  description = "Names of Cordons whose tier identifies this Cordon as their parent."
+  type        = list(string)
+  default     = []
 }

@@ -30,6 +30,21 @@ resource "github_repository_file" "merge_gate" {
   overwrite_on_create = true
 }
 
+resource "github_repository_file" "pull_request" {
+  repository          = github_repository.this.name
+  branch              = "main"
+  file                = ".github/workflows/pull_request.yml"
+  content             = templatefile("${path.module}/pull_request.yml.tmpl", {
+    solution_definitions_release_tag = var.solution_definitions_release_tag
+  })
+  commit_message      = "Add composition validation workflow"
+  overwrite_on_create = true
+
+  depends_on = [
+    github_repository_file.merge_gate
+  ]
+}
+
 resource "github_branch" "source" {
   repository    = github_repository.this.name
   branch        = "development"
