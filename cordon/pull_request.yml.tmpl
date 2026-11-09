@@ -2,10 +2,13 @@ name: Pull Request Validation
 
 on:
   pull_request:
+    branches:
+      - development
     types:
       - opened
       - synchronize
       - reopened
+      - edited
 
 permissions:
   contents: read
@@ -20,11 +23,6 @@ jobs:
       POMOLOGY_FILE: "${split("-", solution_definitions_release_tag)[1]}-pomology.json"
 
     steps:
-      - name: Checkout Cordon
-        uses: actions/checkout@v7.0.1
-        with:
-          submodules: true
-
       - name: Azure Login
         uses: azure/login@v3.1.0
         with:
@@ -57,14 +55,48 @@ jobs:
           $privateKey >> $env:GITHUB_ENV
           "EOF" >> $env:GITHUB_ENV
 
-      - name: Generate GitHub App Installation Token
-        id: app-token
-        uses: actions/create-github-app-token@v3
+      - name: Generate Solution GitHub App Installation Token
+        id: solution-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
+          private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
+          owner: amiasea-enterprise-solution
+          repositories = join(",", concat(
+            [
+              for leaf_name in keys(var.cordon.leaves) :
+              format("%s-%s", var.repo_name_prefix, leaf_name)
+            ],
+            [
+              for cordon_name in var.child_cordon_names :
+              format("%s-%s", var.repo_name_prefix, cordon_name)
+            ]
+          ))
+
+      - name: Generate Solution Definitions GitHub App Installation Token
+        id: definitions-token
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: amiasea
           repositories: enterprise-solution-definitions
+
+      - name: Checkout Cordon
+        uses: actions/checkout@v7.0.1
+        with:
+          token: $${{ steps.solution-token.outputs.token }}
+          submodules: true
+          fetch-depth: 0
+
+      - name: Prepare Leaf main references
+        shell: pwsh
+        run: |
+          git submodule foreach 'git branch --force main origin/main'
+
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Failed to prepare Leaf main branch references.'
+          }
 
       - name: Download Pomology
         uses: robinraju/release-downloader@v1.13
@@ -73,9 +105,11 @@ jobs:
           tag: "${solution_definitions_release_tag}"
           fileName: "$${{ env.POMOLOGY_FILE }}"
           out-file-path: .amiasea
-          token: $${{ steps.app-token.outputs.token }}
+          token: $${{ steps.definitions-token.outputs.token }}
 
-      - name: Validate Composition
-        uses: amiasea/espalier-validation-action@v1
+      - name: Validate Espalier composition
+        uses: amiasea/espalier-validation@v1
         with:
+          type: cordon
           pomology: .amiasea/$${{ env.POMOLOGY_FILE }}
+          variety: $${{ vars.SOLUTION_VARIETY }}
