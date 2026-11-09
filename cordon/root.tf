@@ -8,14 +8,24 @@ resource "github_repository_file" "gitmodules" {
   repository          = github_repository.this.name
   branch              = "main"
   file                = ".gitmodules"
-  content = join("\n", flatten([
-    for leaf_name, leaf in module.leaves : [
-      "[submodule \"${leaf.repository_name}\"]",
-      "    path = ${leaf.repository_name}",
-      "    url = ${leaf.repository_http_clone_url}",
-      ""
+  content = join("\n", flatten(concat(
+    [
+      for leaf in module.leaves : [
+        "[submodule \"${leaf.repository_name}\"]",
+        "    path = ${leaf.repository_name}",
+        "    url = ${leaf.repository_http_clone_url}",
+        ""
+      ]
+    ],
+    [
+      for cordon_name in var.child_cordon_names : [
+        "[submodule \"${var.repo_name_prefix}-${cordon_name}\"]",
+        "    path = ${var.repo_name_prefix}-${cordon_name}",
+        "    url = https://github.com/amiasea-enterprise-solution/${var.repo_name_prefix}-${cordon_name}.git",
+        ""
+      ]
     ]
-  ]))
+  )))
   commit_message      = "Generate .gitmodules"
   overwrite_on_create = true
 }
