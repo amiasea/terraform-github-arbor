@@ -38,8 +38,8 @@ variable "cordon" {
     })
 }
 
-variable "pomology_definitions_release_tag" {
-  description = "Pomology definitions release tag"
+variable "pomology_flora_release_tag" {
+  description = "Pomology flora release tag"
   type        = string
 }
 
