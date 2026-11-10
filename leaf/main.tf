@@ -51,7 +51,7 @@ resource "github_branch" "source" {
   source_branch = "main"
 
   depends_on = [
-    github_repository.this,
-    github_repository_file.merge_gate
+    github_repository_file.merge_gate,
+    github_repository_file.pull_request
   ]
 }
