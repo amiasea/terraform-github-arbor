@@ -95,5 +95,6 @@ resource "github_branch" "source" {
 
   depends_on = [
     github_repository_file.gitmodules,
+    github_repository_file.pull_request
   ]
 }
