@@ -62,7 +62,6 @@ jobs:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: amiasea-enterprise-solution
-          repositories: "${solution_repository_names}"
 
       - name: Generate Solution Definitions GitHub App Installation Token
         id: definitions-token
@@ -97,6 +96,9 @@ jobs:
           fileName: "$${{ env.POMOLOGY_FILE }}"
           out-file-path: .amiasea
           token: $${{ steps.definitions-token.outputs.token }}
+
+      - name: Set up CUE
+        uses: cue-lang/setup-cue@v1.0.0
 
       - name: Validate Espalier composition
         uses: amiasea/espalier-validation@v1
