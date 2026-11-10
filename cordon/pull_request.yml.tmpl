@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      POMOLOGY_FILE: "${split("-", solution_definitions_release_tag)[1]}-pomology.json"
+      POMOLOGY_FILE: "${split("-", pomology_definitions_release_tag)[1]}-pomology.json"
 
     steps:
       - name: Azure Login
@@ -55,27 +55,27 @@ jobs:
           $privateKey >> $env:GITHUB_ENV
           "EOF" >> $env:GITHUB_ENV
 
-      - name: Generate Solution GitHub App Installation Token
-        id: solution-token
+      - name: Generate Pomology GitHub App Installation Token
+        id: pomology-token
         uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
-          owner: amiasea-enterprise-solution
+          owner: amiasea-enterprise-pomology
 
-      - name: Generate Solution Definitions GitHub App Installation Token
+      - name: Generate Pomology Definitions GitHub App Installation Token
         id: definitions-token
         uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: amiasea
-          repositories: enterprise-solution-definitions
+          repositories: enterprise-pomology-definitions
 
       - name: Checkout Cordon
         uses: actions/checkout@v7.0.1
         with:
-          token: $${{ steps.solution-token.outputs.token }}
+          token: $${{ steps.pomology-token.outputs.token }}
           submodules: true
           fetch-depth: 0
 
@@ -91,8 +91,8 @@ jobs:
       - name: Download Pomology
         uses: robinraju/release-downloader@v1.13
         with:
-          repository: amiasea/enterprise-solution-definitions
-          tag: "${solution_definitions_release_tag}"
+          repository: amiasea/enterprise-pomology-definitions
+          tag: "${pomology_definitions_release_tag}"
           fileName: "$${{ env.POMOLOGY_FILE }}"
           out-file-path: .amiasea
           token: $${{ steps.definitions-token.outputs.token }}
@@ -105,4 +105,4 @@ jobs:
         with:
           type: cordon
           pomology: .amiasea/$${{ env.POMOLOGY_FILE }}
-          variety: $${{ vars.SOLUTION_VARIETY }}
+          variety: $${{ vars.POMOLOGY_VARIETY }}

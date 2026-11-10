@@ -1,5 +1,5 @@
 provider "github" {
-  owner = "amiasea-enterprise-solution"
+  owner = "amiasea-enterprise-orchard"
 
   legacy_client = false
 
@@ -10,7 +10,7 @@ run "pomology" {
   command = apply
 
   variables {
-    github_organization_name = "amiasea-enterprise-solution"
+    github_organization_name = "amiasea-enterprise-orchard"
 
     github_app_id = "2670685"
 
@@ -18,7 +18,7 @@ run "pomology" {
 
     pomology = jsondecode(file("tests/pomology.json"))
 
-    solution_definitions_release_tag = "v1.0.0-testing"
+    pomology_definitions_release_tag = "v1.0.0-testing"
   }
 
   assert {

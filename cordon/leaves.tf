@@ -9,5 +9,5 @@ module "leaves" {
   github_app_id    = var.github_app_id
 
   tier = var.repo_name
-  solution_definitions_release_tag = var.solution_definitions_release_tag
+  pomology_definitions_release_tag = var.pomology_definitions_release_tag
 }
