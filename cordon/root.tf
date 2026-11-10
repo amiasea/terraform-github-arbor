@@ -34,8 +34,18 @@ resource "github_repository_file" "pull_request" {
   repository          = github_repository.this.name
   branch              = "main"
   file                = ".github/workflows/pull_request.yml"
-  content             = templatefile("${path.module}/pull_request.yml.tmpl", {
+  content = templatefile("${path.module}/pull_request.yml.tmpl", {
     solution_definitions_release_tag = var.solution_definitions_release_tag
+    solution_repository_names = join(",", concat(
+      [
+        for leaf_name in keys(var.cordon.leaves) :
+        format("%s-%s", var.repo_name_prefix, leaf_name)
+      ],
+      [
+        for cordon_name in var.child_cordon_names :
+        format("%s-%s", var.repo_name_prefix, cordon_name)
+      ]
+    ))
   })
   commit_message      = "Add composition validation workflow"
   overwrite_on_create = true
