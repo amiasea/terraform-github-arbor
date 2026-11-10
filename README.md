@@ -1,6 +1,8 @@
 # Espalier Terraform Module
 
-The Espalier Terraform module provisions a GitHub repository hierarchy from a Pomology definition. It creates the repositories and Git branch structures needed to represent a Solution's selected Varieties and their constituent Leaves.
+The Espalier Terraform module provisions a GitHub repository hierarchy from a Pomology definition. It creates the repositories and Git branch structures needed to represent the defined Varieties and their constituent Leaves.
+
+A Pomology describes the structural composition of a repository hierarchy, including its available Varieties, aspects, and aspect options. A Solution realizes a particular composition through decisions such as selecting a Variety or an aspect option.
 
 Espalier uses ordinary Git and GitHub structures to represent repository composition. Terraform provisions those structures; it does not replace the Git model or determine whether a repository hierarchy is valid.
 
@@ -8,12 +10,12 @@ Espalier uses ordinary Git and GitHub structures to represent repository composi
 
 | Term | Meaning |
 |---|---|
-| **Pomology** | A definition of a Solution's repository hierarchy, available Varieties, and aspect options. |
-| **Arboretum** | The curated set of permitted alternatives for a Solution. |
-| **Variety** | A selectable configuration of a Solution. |
+| **Pomology** | A definition of a repository hierarchy, its available Varieties, and the aspects and aspect options associated with its composition. |
+| **Arboretum** | The curated set of permitted Pomology alternatives. |
+| **Variety** | A defined variation of a Pomology's repository composition. A Solution can select a Variety to determine which composition it realizes. |
 | **Cordon** | A repository that forms a structural node in the repository hierarchy. |
 | **Leaf** | A repository included directly in a Cordon's composition for a given Variety. |
-| **Aspect option** | The option selected for a Leaf within a particular Variety. |
+| **Aspect option** | An option defined for an aspect of a Leaf within a particular Variety. |
 
 ## Requirements
 
@@ -55,7 +57,7 @@ module "espalier" {
 
 ## Inputs
 
-The primary input is `pomology`, which defines the repository structure and available selections.
+The primary input is `pomology`, which defines the repository composition, available Varieties, and associated aspect options.
 
 The module's complete input contract is defined by its `variables.tf` file. Optional inputs, defaults, naming conventions, and validation rules should be taken from that contract.
 
@@ -67,18 +69,21 @@ Returns metadata for the GitHub organization containing the managed repositories
 
 ### `variety_cordon_repositories`
 
-Returns repository metadata organized by Cordon and Variety. For each Cordon, the output describes the Cordon repository and its Leaves. Each Variety's Leaf entries include the repository metadata and the aspect option selected for that Leaf.
+Returns repository metadata organized by Cordon and Variety. For each Cordon, the output describes the Cordon repository and its Leaves. Each Variety's Leaf entries include the repository metadata and the aspect option defined for that Leaf in that Variety.
 
-The output is intended for downstream Terraform configurations that need to reason about the repositories belonging to a particular Solution and its Varieties.
+The output describes the repository composition and its defined alternatives. It does not, by itself, represent an enterprise's selection of a Variety or establish which aspect options have been adopted by a realized Solution.
+
+The output is intended for downstream Terraform configurations that need to reason about the repositories defined by a Pomology and the structural alternatives available to a Solution.
 
 Repository IDs and GraphQL node IDs are distinct identifiers. Consumers should use the numeric repository ID when an API or trust policy requires it, and the GraphQL node ID when an API specifically requires that identifier.
 
 ## Design boundaries
 
-- **Definitions are inputs.** The Pomology definition describes the intended repository structure; the module provisions the corresponding GitHub resources.
+- **Definitions are inputs.** The Pomology definition describes the intended repository composition and its available alternatives; the module provisions the corresponding GitHub resources.
 - **Repository composition uses Git structures.** Repository relationships are represented through GitHub repositories and Git metadata, rather than a separate runtime hierarchy service.
 - **Provisioning and validation are distinct.** Creating the repository structure does not, by itself, prove that the resulting Git state satisfies every Espalier convention.
-- **Downstream consumers own their policies.** This module exposes repository metadata and selection information. Consumers can use those outputs to configure access policies and other solution-specific infrastructure.
+- **Composition and Solution decisions are distinct.** A Pomology defines the available Varieties and aspect options. Selecting a Variety or making a solution-level aspect option selection belongs to the Solution's decision and configuration processes.
+- **Downstream consumers own their policies.** This module exposes repository metadata and composition information. Consumers can use those outputs to configure access policies and other Solution-specific infrastructure.
 
 ## License
 

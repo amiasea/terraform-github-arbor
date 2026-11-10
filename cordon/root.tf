@@ -21,7 +21,7 @@ resource "github_repository_file" "gitmodules" {
       for cordon_name in var.child_cordon_names : [
         "[submodule \"${var.repo_name_prefix}-${cordon_name}\"]",
         "    path = ${var.repo_name_prefix}-${cordon_name}",
-        "    url = https://github.com/amiasea-enterprise-solution/${var.repo_name_prefix}-${cordon_name}.git",
+        "    url = https://github.com/amiasea-enterprise-orchard/${var.repo_name_prefix}-${cordon_name}.git",
         ""
       ]
     ]
@@ -35,8 +35,8 @@ resource "github_repository_file" "pull_request" {
   branch              = "main"
   file                = ".github/workflows/pull_request.yml"
   content = templatefile("${path.module}/pull_request.yml.tmpl", {
-    solution_definitions_release_tag = var.solution_definitions_release_tag
-    solution_repository_names = join(",", concat(
+    pomology_definitions_release_tag = var.pomology_definitions_release_tag
+    pomology_repository_names = join(",", concat(
       [
         for leaf_name in keys(var.cordon.leaves) :
         format("%s-%s", var.repo_name_prefix, leaf_name)

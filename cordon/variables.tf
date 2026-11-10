@@ -38,8 +38,8 @@ variable "cordon" {
     })
 }
 
-variable "solution_definitions_release_tag" {
-  description = "Solution definitions release tag"
+variable "pomology_definitions_release_tag" {
+  description = "Pomology definitions release tag"
   type        = string
 }
 

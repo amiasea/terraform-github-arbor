@@ -35,7 +35,7 @@ resource "github_repository_file" "pull_request" {
   branch              = "main"
   file                = ".github/workflows/pull_request.yml"
   content             = templatefile("${path.module}/pull_request.yml.tmpl", {
-    solution_definitions_release_tag = var.solution_definitions_release_tag
+    pomology_definitions_release_tag = var.pomology_definitions_release_tag
   })
   commit_message      = "Add composition validation workflow"
   overwrite_on_create = true
