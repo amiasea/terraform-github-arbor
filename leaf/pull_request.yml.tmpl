@@ -55,13 +55,13 @@ jobs:
           $privateKey >> $env:GITHUB_ENV
           "EOF" >> $env:GITHUB_ENV
 
-      - name: Generate Pomology GitHub App Installation Token
+      - name: Generate Orchard GitHub App Installation Token
         id: pomology-token
         uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
-          owner: amiasea-enterprise-pomology
+          owner: amiasea-enterprise-orchard
           repositories: $${{ github.event.repository.name }}
 
       - name: Generate Pomology Definitions GitHub App Installation Token
