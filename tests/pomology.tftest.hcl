@@ -18,7 +18,7 @@ run "pomology" {
 
     pomology = jsondecode(file("tests/pomology.json"))
 
-    pomology_definitions_release_tag = "v1.0.0-testing"
+    pomology_flora_release_tag = "v1.0.0-testing"
   }
 
   assert {

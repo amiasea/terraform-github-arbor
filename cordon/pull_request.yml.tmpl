@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      POMOLOGY_FILE: "${split("-", pomology_definitions_release_tag)[1]}-pomology.json"
+      POMOLOGY_FILE: "${split("-", pomology_flora_release_tag)[1]}-pomology.json"
 
     steps:
       - name: Azure Login
@@ -63,14 +63,14 @@ jobs:
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: amiasea-enterprise-orchard
 
-      - name: Generate Pomology Definitions GitHub App Installation Token
-        id: definitions-token
+      - name: Generate Pomology Flora GitHub App Installation Token
+        id: flora-token
         uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: amiasea
-          repositories: enterprise-pomology-definitions
+          repositories: enterprise-pomology-flora
 
       - name: Checkout Cordon
         uses: actions/checkout@v7.0.1
@@ -91,11 +91,11 @@ jobs:
       - name: Download Pomology
         uses: robinraju/release-downloader@v1.13
         with:
-          repository: amiasea/enterprise-pomology-definitions
-          tag: "${pomology_definitions_release_tag}"
+          repository: amiasea/enterprise-pomology-flora
+          tag: "${pomology_flora_release_tag}"
           fileName: "$${{ env.POMOLOGY_FILE }}"
           out-file-path: .amiasea
-          token: $${{ steps.definitions-token.outputs.token }}
+          token: $${{ steps.flora-token.outputs.token }}
 
       - name: Set up CUE
         uses: cue-lang/setup-cue@v1.0.0

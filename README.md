@@ -1,6 +1,6 @@
 # Espalier Terraform Module
 
-The Espalier Terraform module provisions a GitHub repository hierarchy from a Pomology definition. It creates the repositories and Git branch structures needed to represent the defined Varieties and their constituent Leaves.
+The Espalier Terraform module provisions a GitHub repository hierarchy from a Pomology flora. It creates the repositories and Git branch structures needed to represent the defined Varieties and their constituent Leaves.
 
 A Pomology describes the structural composition of a repository hierarchy, including its available Varieties, aspects, and aspect options. A Solution realizes a particular composition through decisions such as selecting a Variety or an aspect option.
 
@@ -10,7 +10,7 @@ Espalier uses ordinary Git and GitHub structures to represent repository composi
 
 | Term | Meaning |
 |---|---|
-| **Pomology** | A definition of a repository hierarchy, its available Varieties, and the aspects and aspect options associated with its composition. |
+| **Pomology** | A flora of a repository hierarchy, its available Varieties, and the aspects and aspect options associated with its composition. |
 | **Arboretum** | The curated set of permitted Pomology alternatives. |
 | **Variety** | A defined variation of a Pomology's repository composition. A Solution can select a Variety to determine which composition it realizes. |
 | **Cordon** | A repository that forms a structural node in the repository hierarchy. |
@@ -22,7 +22,7 @@ Espalier uses ordinary Git and GitHub structures to represent repository composi
 - Terraform meeting the version constraint declared by the module.
 - The `integrations/github` Terraform provider meeting the version constraint declared by the module.
 - GitHub authentication with permission to create and configure the repositories managed by the module.
-- A valid Pomology definition supplied by the calling configuration.
+- A valid Pomology flora supplied by the calling configuration.
 
 The GitHub provider must be configured by the root configuration or calling Terraform Stack.
 
@@ -41,7 +41,7 @@ module "espalier" {
 }
 ```
 
-Replace `x.y.z` with the module version you intend to use. The example assumes that `pomology.json` contains a Pomology definition compatible with the module's input schema.
+Replace `x.y.z` with the module version you intend to use. The example assumes that `pomology.json` contains a Pomology flora compatible with the module's input schema.
 
 For a local checkout, use a local module source instead:
 
@@ -79,7 +79,7 @@ Repository IDs and GraphQL node IDs are distinct identifiers. Consumers should u
 
 ## Design boundaries
 
-- **Definitions are inputs.** The Pomology definition describes the intended repository composition and its available alternatives; the module provisions the corresponding GitHub resources.
+- **Flora are inputs.** The Pomology flora describes the intended repository composition and its available alternatives; the module provisions the corresponding GitHub resources.
 - **Repository composition uses Git structures.** Repository relationships are represented through GitHub repositories and Git metadata, rather than a separate runtime hierarchy service.
 - **Provisioning and validation are distinct.** Creating the repository structure does not, by itself, prove that the resulting Git state satisfies every Espalier convention.
 - **Composition and Solution decisions are distinct.** A Pomology defines the available Varieties and aspect options. Selecting a Variety or making a solution-level aspect option selection belongs to the Solution's decision and configuration processes.

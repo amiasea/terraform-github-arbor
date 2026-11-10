@@ -16,7 +16,7 @@ module "cordon" {
     if cordon.tier == each.key
   ]
 
-  pomology_definitions_release_tag = var.pomology_definitions_release_tag
+  pomology_flora_release_tag = var.pomology_flora_release_tag
 }
 
 data "github_organization" "this" {
