@@ -62,7 +62,7 @@ jobs:
           app-id: $${{ vars.AMIASEA_GITHUB_APP_ID }}
           private-key: $${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: amiasea-enterprise-solution
-          repositories = join(",", concat(
+          repositories: "${join(",", concat(
             [
               for leaf_name in keys(var.cordon.leaves) :
               format("%s-%s", var.repo_name_prefix, leaf_name)
@@ -71,7 +71,7 @@ jobs:
               for cordon_name in var.child_cordon_names :
               format("%s-%s", var.repo_name_prefix, cordon_name)
             ]
-          ))
+          ))}"
 
       - name: Generate Solution Definitions GitHub App Installation Token
         id: definitions-token
