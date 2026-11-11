@@ -23,6 +23,20 @@ jobs:
       POMOLOGY_FILE: "${split("-", pomology_flora_release_tag)[1]}-pomology.json"
 
     steps:
+
+      - name: Validate Pomology variety
+        shell: pwsh
+        env:
+          POMOLOGY_VARIETY: $${{ vars.POMOLOGY_VARIETY }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if ([string]::IsNullOrWhiteSpace($env:POMOLOGY_VARIETY)) {
+            throw "Repository variable POMOLOGY_VARIETY must have a value."
+          }
+
+          Write-Host "Pomology variety: $env:POMOLOGY_VARIETY"
+
       - name: Azure Login
         uses: azure/login@v3.1.0
         with:
