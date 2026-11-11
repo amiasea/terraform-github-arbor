@@ -30,6 +30,7 @@ resource "github_repository_ruleset" "main" {
 
   depends_on = [
     github_repository_file.merge_gate,
+    github_repository_file.pull_request
   ]
 }
 
