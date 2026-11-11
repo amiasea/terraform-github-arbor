@@ -27,7 +27,7 @@ jobs:
       - name: Validate Pomology variety
         shell: pwsh
         env:
-          POMOLOGY_VARIETY: ${{ vars.POMOLOGY_VARIETY }}
+          POMOLOGY_VARIETY: $${{ vars.POMOLOGY_VARIETY }}
         run: |
           $ErrorActionPreference = "Stop"
 
