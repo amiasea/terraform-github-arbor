@@ -99,7 +99,7 @@ jobs:
           repository: amiasea/enterprise-pomology-flora
           tag: "${pomology_flora_release_tag}"
           fileName: "$${{ env.POMOLOGY_FILE }}"
-          out-file-path: .amiasea
+          out-file-path: "$${{ runner.temp }}"
           token: $${{ steps.flora-token.outputs.token }}
 
       - name: Set up CUE
@@ -108,6 +108,6 @@ jobs:
       - name: Validate Espalier composition
         uses: amiasea/espalier-validation@v1
         with:
-          type: leaf
-          pomology: .amiasea/$${{ env.POMOLOGY_FILE }}
+          type: cordon
+          pomology: "$${{ runner.temp }}/$${{ env.POMOLOGY_FILE }}"
           variety: $${{ vars.POMOLOGY_VARIETY }}
