@@ -55,26 +55,6 @@ resource "github_repository_file" "pull_request" {
   ]
 }
 
-data "github_repository_file" "pull_request" {
-  repository = github_repository.this.name
-  branch     = "main"
-  file       = ".github/workflows/pull_request.yml"
-
-  depends_on = [
-    github_repository_file.pull_request
-  ]
-}
-
-data "github_repository_file" "gitmodules" {
-  repository = github_repository.this.name
-  branch     = "main"
-  file       = ".gitmodules"
-
-  depends_on = [
-    github_repository_file.gitmodules
-  ]
-}
-
 resource "github_repository_custom_property" "cordon" {
   repository    = github_repository.this.name
   property_name = "cordon"
@@ -114,7 +94,7 @@ resource "github_branch" "source" {
   source_branch = "main"
 
   depends_on = [
-    data.github_repository_file.gitmodules,
-    data.github_repository_file.pull_request
+    github_repository_file.gitmodules,
+    github_repository_file.pull_request
   ]
 }
