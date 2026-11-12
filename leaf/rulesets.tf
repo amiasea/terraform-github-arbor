@@ -29,7 +29,7 @@ resource "github_repository_ruleset" "main" {
   }
 
   depends_on = [
-    data.github_repository_file.pull_request
+    github_repository_file.pull_request
   ]
 }
 

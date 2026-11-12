@@ -31,22 +31,12 @@ resource "github_repository_file" "pull_request" {
   overwrite_on_create = true
 }
 
-data "github_repository_file" "pull_request" {
-  repository = github_repository.this.name
-  branch     = "main"
-  file       = ".github/workflows/pull_request.yml"
-
-  depends_on = [
-    github_repository_file.pull_request
-  ]
-}
-
 resource "github_branch" "source" {
   repository    = github_repository.this.name
   branch        = "development"
   source_branch = "main"
 
   depends_on = [
-    data.github_repository_file.pull_request
+    github_repository_file.pull_request
   ]
 }
