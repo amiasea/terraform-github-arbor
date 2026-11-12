@@ -45,13 +45,33 @@ resource "github_repository_file" "pull_request" {
   ]
 }
 
+data "github_repository_file" "merge_gate" {
+  repository = github_repository.this.name
+  branch     = "main"
+  file       = ".github/workflows/merge_gate.yml"
+
+  depends_on = [
+    github_repository_file.merge_gate
+  ]
+}
+
+data "github_repository_file" "pull_request" {
+  repository = github_repository.this.name
+  branch     = "main"
+  file       = ".github/workflows/pull_request.yml"
+
+  depends_on = [
+    github_repository_file.pull_request
+  ]
+}
+
 resource "github_branch" "source" {
   repository    = github_repository.this.name
   branch        = "development"
   source_branch = "main"
 
   depends_on = [
-    github_repository_file.merge_gate,
-    github_repository_file.pull_request
+    data.github_repository_file.merge_gate,
+    data.github_repository_file.pull_request
   ]
 }
