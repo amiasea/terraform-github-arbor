@@ -20,16 +20,6 @@ resource "github_repository_custom_property" "tier" {
   property_value = toset([var.tier])
 }
 
-resource "github_repository_file" "merge_gate" {
-  repository = github_repository.this.name
-
-  file                = ".github/workflows/merge_gate.yml"
-  content             = file("${path.module}/merge_gate.yml")
-  branch              = "main"
-  commit_message      = "Manage merge gate workflow"
-  overwrite_on_create = true
-}
-
 resource "github_repository_file" "pull_request" {
   repository          = github_repository.this.name
   branch              = "main"
@@ -39,9 +29,15 @@ resource "github_repository_file" "pull_request" {
   })
   commit_message      = "Add composition validation workflow"
   overwrite_on_create = true
+}
+
+data "github_repository_file" "pull_request" {
+  repository = github_repository.this.name
+  branch     = "main"
+  file       = ".github/workflows/pull_request.yml"
 
   depends_on = [
-    github_repository_file.merge_gate
+    github_repository_file.pull_request
   ]
 }
 
@@ -51,7 +47,6 @@ resource "github_branch" "source" {
   source_branch = "main"
 
   depends_on = [
-    github_repository_file.merge_gate,
-    github_repository_file.pull_request
+    data.github_repository_file.pull_request
   ]
 }
